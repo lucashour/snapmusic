@@ -20,9 +20,9 @@ app.use(bodyParser.urlencoded({
 
 app.get('/', function(req, res) {
   if (spotifyApi.getAccessToken()) {
-    return res.send('You are logged in.');
+    return res.send('Sesión iniciada :D.');
   }
-  return res.send('<a href="/authorise">Authorise</a>');
+  return res.send('<button><a href="/authorise">Autorizame che!</a></button>');
 });
 
 app.get('/authorise', function(req, res) {
@@ -54,12 +54,12 @@ app.post('/store', function(req, res) {
   spotifyApi.refreshAccessToken()
     .then(function(data) {
       spotifyApi.setAccessToken(data.body['access_token']);
-      if (data.body['refresh_token']) { 
+      if (data.body['refresh_token']) {
         spotifyApi.setRefreshToken(data.body['refresh_token']);
       }
       if(req.body.text.indexOf(' - ') === -1) {
         var query = 'track:' + req.body.text;
-      } else { 
+      } else {
         var pieces = req.body.text.split(' - ');
         var query = 'artist:' + pieces[0].trim() + ' track:' + pieces[1].trim();
       }
@@ -72,7 +72,7 @@ app.post('/store', function(req, res) {
           var track = results[0];
           spotifyApi.addTracksToPlaylist(process.env.SPOTIFY_USERNAME, process.env.SPOTIFY_PLAYLIST_ID, ['spotify:track:' + track.id])
             .then(function(data) {
-              return res.send('Track added: *' + track.name + '* by *' + track.artists[0].name + '*');
+              return res.send('Canción agregada: *' + track.name + '* de *' + track.artists[0].name + '*');
             }, function(err) {
               return res.send(err.message);
             });
@@ -80,7 +80,7 @@ app.post('/store', function(req, res) {
           return res.send(err.message);
         });
     }, function(err) {
-      return res.send('Could not refresh access token. You probably need to re-authorise yourself from your app\'s homepage.');
+      return res.send('Mmmm, parece que algo se rompió! Probá re-autorizando tu acceso en https://snapmusic.herokuapp.com.');
     });
 });
 
