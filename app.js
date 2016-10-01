@@ -20,7 +20,7 @@ app.use(bodyParser.urlencoded({
 
 app.get('/', function(req, res) {
   if (spotifyApi.getAccessToken()) {
-    return res.send('Sesión iniciada :D.');
+    return res.send('Sesión iniciada :D');
   }
   return res.send('<button><a href="/authorise">Autorizame che!</a></button>');
 });
@@ -67,7 +67,7 @@ app.post('/store', function(req, res) {
         .then(function(data) {
           var results = data.body.tracks.items;
           if (results.length === 0) {
-            return res.send('Could not find that track.');
+            return res.send('Canción no encontrada. Seguro que la escribiste bien? :|');
           }
           var track = results[0];
           spotifyApi.addTracksToPlaylist(process.env.SPOTIFY_USERNAME, process.env.SPOTIFY_PLAYLIST_ID, ['spotify:track:' + track.id])
@@ -80,7 +80,7 @@ app.post('/store', function(req, res) {
           return res.send(err.message);
         });
     }, function(err) {
-      return res.send('Mmmm, parece que algo se rompió! Probá re-autorizando tu acceso en https://snapmusic.herokuapp.com.');
+      return res.send('Mmmm, parece que Heroku te pateó! Probá re-autorizando tu acceso en https://snapmusic.herokuapp.com.');
     });
 });
 
