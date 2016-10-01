@@ -1,39 +1,33 @@
-# slackbox
-Spotify playlist collaboration through Slack. Brought to you by the lovely people at [Benchmark](http://benchmark.co.uk).
+# SnapMusic
+Idea original: Spotify playlist collaboration through Slack. Brought to you by the lovely people at [Benchmark](http://benchmark.co.uk).
 
-[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
+Simplemente crear un Slash Command, como '/play', que acepte el nombre de una canción (pudiendo también agregarse el artista, para una búsqueda más precisa) para agregarla en una playlist colaborativa.
 
-Simply create a Slash Command, such as `/jukebox`, which accepts a track name (also the artist too for a less fuzzy search) to add to a pre-defined Spotify playlist:
+    /play Queen - Bohemian Rhapsody
 
-    /jukebox Bell Biv DeVoe – Poison
+##Instalación
 
-##Installation
+Antes que nada, crear el Slash Command de Slack desde [Slash Commands](https://my.slack.com/services/new/slash-commands).
 
-First you'll want to create your Slack Slash Command, which you can do by going to your [Slash Commands page](https://my.slack.com/services/new/slash-commands).
+Durante la instalación, indicar que el comando le pegue por POST al endpoint '/store' de la aplicación.
 
-During setup, have your slash command submit a POST to your app's `/store` endpoint, e.g. `https://app-name.herokuapp.com/store`.
-
-Make a note of the `token`, as you'll need it later to help guard against cross-site request forgery.
+Tomar nota del 'token' para usarlo posteriormente.
 
 ###Spotify
 
-Head over to [Spotify's Developer Site](http://developer.spotify.com) and create a new Application. Make sure you add whatever slackbox's callback URI as a valid callback URI. If you're running locally, this will be `http://localhost:5000/callback` or on Heroku `https://app-name.herokuapp.com/callback`
+Entrar a [Spotify's Developer Site](http://developer.spotify.com) y crear una nueva aplicación. Recordar usar como URI de redirección el endpoint '/callback' de la aplicación. Tomar nota del 'client id' y del 'client secret' para usarlo posteriormente.
 
-Make a note of the `key`, `secret` and `callback URI` too, as you'll need these later as well.
+Por otra parte, elegir una playlist (o crearla) en Spotify y hacerla colaborativa. Tomar nota del 'playlist identifier' para usarlo posteriormente.
 
-Also, don't forget to make a playlist. If you do this through [Spotify's web interface](http://play.spotify.com) then the `playlist identifier` will be the last segment of the URI - make a note of this too! If there's a better way of finding this out, we're all ears. If you do this through the app, right-click the playlist to get it's web URL and again, you need the last segment of the URI.
+###Configuración de variables de entorno
 
-###Environment variables
+* `SLACK_TOKEN` - Token del Slash Command de Slack.
+* `SPOTIFY_KEY` - Client id de Spotify.
+* `SPOTIFY_SECRET` - Client Secret de Spotify.
+* `SPOTIFY_USERNAME` - Username de Spotify.
+* `SPOTIFY_PLAYLIST_ID` - ID de playlist.
+* `SPOTIFY_REDIRECT_URI` - URI de redirección.
 
-Once you've cloned slackbox or hit the "Deploy with Heroku" button you'll need to setup the following environment variables. These can either be stored in a `.env` or set up as config variables in Heroku.
+###Autenticación
 
-* `SLACK_TOKEN` - The token from Slack's Slash Command.
-* `SPOTIFY_KEY` - Your Spotify application key (a.k.a Client ID).
-* `SPOTIFY_SECRET` - Your Spotify application secret (a.k.a Client Secret).
-* `SPOTIFY_USERNAME` - Your Spotify username.
-* `SPOTIFY_PLAYLIST_ID` - Your playlist identifier.
-* `SPOTIFY_REDIRECT_URI` - URI to redirect to once your user has allowed the application's permissions.
-
-###Authentication
-
-Visit your slackbox's home page to authenticate yourself with Spotify and you should be all set!
+Visitar home page de aplicación para autenticarte con tu cuenta de Spotify.
