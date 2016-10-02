@@ -84,5 +84,38 @@ app.post('/store', function(req, res) {
     });
 });
 
+app.get('/get_tracks', function(req, res){
+  spotifyApi.refreshAccessToken()
+    .then(function(data) {
+      spotifyApi.setAccessToken(data.body['access_token']);
+      if (data.body['refresh_token']) {
+        spotifyApi.setRefreshToken(data.body['refresh_token']);
+      }
+      if(req.body.text.indexOf(' - ') === -1) {
+        var query = 'track:' + req.body.text;
+      } else {
+        var pieces = req.body.text.split(' - ');
+        var query = 'artist:' + pieces[0].trim() + ' track:' + pieces[1].trim();
+      }
+      spotifyApi.searchTracks(query)
+        .then(function(data) {
+          var results = data.body.tracks.items;
+          if (results.length === 0) {
+            return res.send('No se encontraron canciones. Seguro que escribiste bien? :|');
+          }
+          var tracks = results.slice(0, 9);
+	  var response = '*CANCIONES ENCONTRADAS:* \n';
+	  for(var index = 0; index < tracks.length; index++){
+	   response = response.concat('*' + tracks[index].name + '* de *' + tracks[index].artists[0].name + '*\n');
+	  }
+	  return res.send(response);
+        }, function(err) {
+          return res.send(err.message);
+        });
+    }, function(err) {
+      return res.send('Mmmm, parece que Heroku te pateó! Probá re-autorizando tu acceso en https://snapmusic.herokuapp.com.');
+    });
+});
+
 app.set('port', (process.env.PORT || 5000));
 app.listen(app.get('port'));
