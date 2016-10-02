@@ -84,7 +84,14 @@ app.post('/store', function(req, res) {
     });
 });
 
-app.get('/get_tracks', function(req, res){
+app.use('/get_tracks', function(req, res, next) {
+  if (req.body.token !== process.env.SLACK_TOKEN_TRACKS) {
+    return res.status(500).send('Cross site request forgerizzle!');
+  }
+  next();
+});
+
+app.post('/get_tracks', function(req, res){
   spotifyApi.refreshAccessToken()
     .then(function(data) {
       spotifyApi.setAccessToken(data.body['access_token']);
